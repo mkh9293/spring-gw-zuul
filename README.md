@@ -1,2 +1,2 @@
 # spring-gw-zuul
-api gateway(zuul), downtime deployment example
+api gateway(zuul), zero downtime deployment example
