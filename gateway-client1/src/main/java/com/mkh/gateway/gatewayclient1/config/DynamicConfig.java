@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RefreshScope
 public class DynamicConfig {
-    @Value("${spring.application.name}")
+    @Value("${application.service.name}")
     private String name;
 
     public String dynamicConfig() {

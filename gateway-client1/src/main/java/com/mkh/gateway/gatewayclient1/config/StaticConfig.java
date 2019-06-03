@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class StaticConfig {
 
-    @Value("${spring.application.name}")
+    @Value("${application.service.name}")
     private String appName;
 
     public String staticConfig() {
