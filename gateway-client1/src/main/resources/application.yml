@@ -1,2 +1,12 @@
 server:
   port: 8081
+
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: gateway-client1
+  cloud:
+    config:
+      uri: http://localhost:8888
