@@ -7,6 +7,9 @@ spring:
     active: dev
   application:
     name: gateway-client1
+  cloud:
+    config:
+      uri: http://localhost:8888
 
 management:
   endpoints:
