@@ -10,6 +10,14 @@ zuul:
     connect-timeout-millis: 60000
     socket-timeout-millis: 60000
   routes:
+    space-auth-api:
+      path: /auth/mobile/**
+      url: http://auth-api.malangmalang.com:8088
+      stripPrefix: false
+    space-os-api:
+      path: /os/mobile/**
+      url: http://os-api.malangmalang.com:8088
+      stripPrefix: false
     foo-api:
       path: /foos/**
       url: http://localhost:8081

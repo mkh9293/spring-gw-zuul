@@ -9,16 +9,16 @@ import okhttp3.internal.http.HttpMethod;
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.StreamUtils;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class FooFilter extends ZuulFilter  {
@@ -33,10 +33,7 @@ public class FooFilter extends ZuulFilter  {
     public boolean shouldFilter() {
         RequestContext context = RequestContext.getCurrentContext();
         String requestUri = context.getRequest().getRequestURI();
-        System.out.println(context.getRequest().getRequestURI());
-        System.out.println(context.getRequest().getRequestURL());
         return requestUri.startsWith("/foos");
-//        return "foo-api".equals(context.get("proxy"));
     }
 
     /**
@@ -60,64 +57,18 @@ public class FooFilter extends ZuulFilter  {
      */
     @Override
     public Object run() {
-        System.out.println("foo~~~~~~~~~~~~");
         RequestContext context = new RequestContext().getCurrentContext();
 
-//        OkHttpClient httpClient = new OkHttpClient.Builder()
-//                // customize
-//                .build();
-//
-//        HttpServletRequest request = context.getRequest();
-//
-//        String method = request.getMethod();
-//
-//        String uri = this.helper.buildZuulRequestURI(request);
-//
-//        Headers.Builder headers = new Headers.Builder();
-//        Enumeration<String> headerNames = request.getHeaderNames();
-//        while (headerNames.hasMoreElements()) {
-//            String name = headerNames.nextElement();
-//            Enumeration<String> values = request.getHeaders(name);
-//
-//            while (values.hasMoreElements()) {
-//                String value = values.nextElement();
-//                headers.add(name, value);
-//            }
-//        }
-//
-//        InputStream inputStream = null;
-//        try {
-//            inputStream = request.getInputStream();
-//        } catch (IOException e) {
-//            e.getMessage();
-//        }
-//
-//
-//        RequestBody requestBody = null;
-//        if (inputStream != null && HttpMethod.permitsRequestBody(method)) {
-//            MediaType mediaType = null;
-//            if (headers.get("Content-Type") != null) {
-//                mediaType = MediaType.parse(headers.get("Content-Type"));
-//            }
-//            requestBody = RequestBody.create(mediaType, StreamUtils.copyToByteArray(inputStream));
-//        }
-//
-//        Request.Builder builder = new Request.Builder()
-//                .headers(headers.build())
-//                .url(uri)
-//                .method(method, requestBody);
-//
-//        Response response = httpClient.newCall(builder.build()).execute();
-//
-//        LinkedMultiValueMap<String, String> responseHeaders = new LinkedMultiValueMap<>();
-//
-//        for (Map.Entry<String, List<String>> entry : response.header().toMultimap().entrySet()) {
-//            responseHeaders.put(entry.getKey(), entry.getValue());
-//        }
-        context.addZuulRequestHeader("foo", "bar");
-//        context.set
+        RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+        String result = restTemplate.getForObject("http://localhost:8080/bars/home", String.class);
+        System.out.println("result : " + result);
+
+        context.addZuulRequestHeader("foo", result);
+        Map<String, List<String>> map = new HashMap<>();
+        map.put("data1", Arrays.asList("value1"));
+        map.put("data2", Arrays.asList("value2"));
+
+        context.setRequestQueryParams(map);
         return null;
-
-
     }
 }

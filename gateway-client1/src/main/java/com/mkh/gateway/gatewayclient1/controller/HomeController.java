@@ -2,9 +2,9 @@ package com.mkh.gateway.gatewayclient1.controller;
 
 import com.mkh.gateway.gatewayclient1.config.DynamicConfig;
 import com.mkh.gateway.gatewayclient1.config.StaticConfig;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/foos")
@@ -19,7 +19,11 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String home() {
+    public String home(@RequestHeader(value="foo") String header , @RequestParam Map<String, String> data) {
+        System.out.println("header : " + header);
+        System.out.println("data : " + data.get("data1"));
+        System.out.println("data : " + data.get("data2"));
+
         return "home";
     }
 
