@@ -5,6 +5,7 @@ import com.mkh.gateway.gatewayclient1.config.StaticConfig;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +20,17 @@ public class HomeController {
 
     private StaticConfig staticConfig;
     private DynamicConfig dynamicConfig;
+    private Environment environment;
 
-    public HomeController(StaticConfig staticConfig, DynamicConfig dynamicConfig) {
+    public HomeController(StaticConfig staticConfig, DynamicConfig dynamicConfig, Environment environment) {
         this.staticConfig = staticConfig;
         this.dynamicConfig = dynamicConfig;
+        this.environment = environment;
     }
 
     @GetMapping("/home")
     public String home(@RequestHeader(value="foo") String header , @RequestParam Map<String, String> data) {
+        System.out.println(environment.getProperty("local.server.port"));
         System.out.println("header : " + header);
         System.out.println("data : " + data.get("data1"));
         System.out.println("data : " + data.get("data2"));
@@ -34,13 +38,14 @@ public class HomeController {
         return "home";
     }
 
+    @HystrixCommand
     @GetMapping("/config")
     public String config() {
         String config = "static : " + staticConfig.staticConfig() + " , dynamic : " + dynamicConfig.dynamicConfig();
         return config;
     }
 
-    @GetMapping("/histrix")
+    @GetMapping("/hystrixTest")
     @HystrixCommand(fallbackMethod = "fallback")
     public String hystrix(@RequestParam String path) {
         log.debug("path : " + path);
