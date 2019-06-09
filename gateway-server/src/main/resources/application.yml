@@ -5,10 +5,8 @@ spring:
 server:
   port: 8080
 
-
-ribbon:
-  eureka: false
-
+#eureka:
+#  enabled: false
 
 zuul:
   host:
@@ -23,8 +21,9 @@ zuul:
       path: /os/mobile/**
       url: http://os-api.malangmalang.com:8088
       stripPrefix: false
-    foo-api:
+    gateway-client1:
       path: /foos/**
+      serviceId: gateway-client1
       stripPrefix: false
     bar-api:
       path: /bars/**
@@ -44,7 +43,22 @@ zuul:
 #          thread:
 #            timeoutInMilliseconds: 6000
 
-foo-api:
-  ribbon:
-    listOfServers: localhost:8088, localhost:8081
-    ServerListRefreshInterval: 5000 # 서버리스트 캐쉬를 5초로 설정
+#foo-api:
+#  ribbon:
+#    eureka:
+#      enabled: true
+#    listOfServers: localhost:8088, localhost:8081
+#    ServerListRefreshInterval: 5000 # 서버리스트 캐쉬를 5초로 설정
+
+#gateway-client1:
+#  ribbon:
+#    eureka:
+#      enabled: false
+#    listOfServers: localhost:8088, localhost:8081
+#    ServerListRefreshInterval: 5000 # 서버리스트 캐쉬를 5초로 설정
+
+eureka:
+  client:
+    enabled: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka

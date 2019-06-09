@@ -2,30 +2,28 @@ package com.mkh.gateway.gatewayserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.cloud.config.server.EnableConfigServer;
-import org.springframework.cloud.netflix.ribbon.RibbonClient;
-import org.springframework.cloud.netflix.ribbon.RibbonClients;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.client.RestTemplate;
 
+/**
+ * eureka 설정 시, 내부적으로 ribbon을 사용하므로 설정 주석 처리
+ */
 //@EnableConfigServer
-@RibbonClients({
-        @RibbonClient(name="foo-api")
-})
+@EnableEurekaClient
+//@RibbonClients({
+//        @RibbonClient(name="gateway-client1")
+//})
 @EnableZuulProxy
 @SpringBootApplication
 public class GatewayServerApplication {
 
 //    public static final String app_location = "spring.config.location=classpath:application.yml";
 
-    @LoadBalanced
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
+//    @LoadBalanced
+//    @Bean
+//    public RestTemplate restTemplate() {
+//        return new RestTemplate();
+//    }
 
     public static void main(String[] args) {
 //        new SpringApplicationBuilder(GatewayServerApplication.class)

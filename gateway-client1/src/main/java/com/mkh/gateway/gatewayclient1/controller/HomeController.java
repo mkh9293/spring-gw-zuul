@@ -28,6 +28,13 @@ public class HomeController {
         this.environment = environment;
     }
 
+    @GetMapping("/ribbonTest")
+    public String ribbonTest() {
+        String port = environment.getProperty("local.server.port");
+        System.out.println(port);
+        return port;
+    }
+
     @GetMapping("/home")
     public String home(@RequestHeader(value="foo") String header , @RequestParam Map<String, String> data) {
         System.out.println(environment.getProperty("local.server.port"));
@@ -47,7 +54,7 @@ public class HomeController {
 
     @GetMapping("/hystrixTest")
     @HystrixCommand(fallbackMethod = "fallback")
-    public String hystrix(@RequestParam String path) {
+    public String hystrix(@RequestParam(value = "path") String path) {
         log.debug("path : " + path);
 
         ResponseEntity<String> entity = new RestTemplate().getForEntity("http://localhost:8080/"+path, String.class);
